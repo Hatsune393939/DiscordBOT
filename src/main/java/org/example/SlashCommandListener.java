@@ -3,6 +3,7 @@ package org.example;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
@@ -22,7 +23,7 @@ import java.util.regex.Pattern;
 import static org.example.Main.getColor;
 import static org.example.Main.setFormat2;
 
-class onSlashCommand extends ListenerAdapter {
+class SlashCommandListener extends ListenerAdapter {
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
         if (event.getName().equals("help")) {
@@ -38,9 +39,12 @@ class onSlashCommand extends ListenerAdapter {
             HelpList.add("**制作者**: たぶ");
             HelpList.add("**スペシャルサンクス**: たぶ鯖の運営陣");
             HelpList.add("~~━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━~~");
-            HelpList.add("**コマンドリスト**");
+            HelpList.add("**コマンドリスト①**");
             HelpList.add("**/help**: このメッセージを表示することができます");
             HelpList.add("**/stats (player name)**: プレイヤーのステータスを表示することができます");
+            HelpList.add("~~━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━~~");
+            HelpList.add("**コマンドリスト②**");
+            HelpList.add("**/au**: auじゃんけんをすることができます");
             HelpList.add("~~━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━~~");
             String Help = String.join("\n", HelpList);
             Embed.addField("", Help, false);
@@ -170,6 +174,30 @@ class onSlashCommand extends ListenerAdapter {
                 Embed.addField("", Stats, false);
                 event.reply(Builder.setEmbeds(Embed.build()).build()).queue();
             }
+        } else if (event.getName().equals("au")) {
+            MessageCreateBuilder Builder = new MessageCreateBuilder();
+            EmbedBuilder Embed = new EmbedBuilder();
+            Embed.setTitle("auじゃんけん");
+            Embed.setFooter("Version: 1.0.0");
+            Embed.setColor(Color.ORANGE);
+            List<String> auList = new ArrayList<>();
+            auList.add("~~━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━~~");
+            auList.add("**ボタンをクリック!**");
+            auList.add("<:tabuuuu:793720801563246612>: グー (✊)");
+            auList.add("<:Kenta3578:793720567223812146>: チョキ (✌️)");
+            auList.add("<:margarineO:793720633439420436>: パー (\uD83D\uDD90)");
+            auList.add("<:pien:791868411587067935>: 絶対にクリックするな (❌)");
+            auList.add("~~━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━~~");
+            String au = String.join("\n", auList);
+            Embed.addField("", au, false);
+            //event.getChannel().sendMessage(Builder.setEmbeds(Embed.build()).build()).queue();
+            event.reply(Builder.setEmbeds(Embed.build()).build())
+                .addActionRow(
+                        net.dv8tion.jda.api.interactions.components.buttons.Button.success("rock", Emoji.fromFormatted("<:tabuuuu:793720801563246612>")),
+                        net.dv8tion.jda.api.interactions.components.buttons.Button.success("scissors", Emoji.fromFormatted("<:Kenta3578:793720567223812146>")),
+                        net.dv8tion.jda.api.interactions.components.buttons.Button.success("paper", Emoji.fromFormatted("<:margarineO:793720633439420436>")),
+                        net.dv8tion.jda.api.interactions.components.buttons.Button.danger("don't click me", Emoji.fromFormatted("<:pien:791868411587067935>")))
+                .queue();
         } else {
             event.reply("Unknown command. Type \"/help\" for help.").queue();
         }

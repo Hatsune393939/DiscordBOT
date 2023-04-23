@@ -26,16 +26,19 @@ public class Main extends ListenerAdapter {
         try {
             JDA jda = JDABuilder.createLight(Token, GatewayIntent.GUILD_MESSAGES, GatewayIntent.DIRECT_MESSAGES)
                     .setRawEventsEnabled(true)
-                    .addEventListeners(new onSlashCommand())
+                    .addEventListeners(new SlashCommandListener())
+                    .addEventListeners(new ButtonInteractionListener())
                     .setActivity(Activity.playing("/help"))
                     .build();
             jda.awaitReady();
             SlashCommandData Command = Commands.slash("help", "このBotのヘルプとコマンドを表示することができます");
             SlashCommandData Command2 = Commands.slash("stats", "プレイヤーのステータスを表示することができます")
                     .addOptions(new OptionData(OptionType.STRING,"player_name","プレイヤー名を入力してください", true).setRequired(true));
+            SlashCommandData Command3 = Commands.slash("au", "auじゃんけんをすることができます");
             jda.updateCommands()
                     .addCommands(Command)
                     .addCommands(Command2)
+                    .addCommands(Command3)
                     .queue();
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -51,7 +54,11 @@ public class Main extends ListenerAdapter {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return properties.getProperty("TOKEN");
+        if (java.lang.management.ManagementFactory.getRuntimeMXBean().getInputArguments().toString().indexOf("-agentlib:jdwp") > 0) {
+            return properties.getProperty("TOKEN-DEBUG");
+        } else {
+            return properties.getProperty("TOKEN");
+        }
     }
 
     /*
